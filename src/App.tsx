@@ -32,9 +32,9 @@ function App() {
                 books.length > 0 && (
                     books.map((book, index) => {
                         if (books.length === index + 1) {
-                            return <div ref={lastBookElementRef} key={book}>{book}</div>
+                            return <div ref={lastBookElementRef} key={book.key}>{book.title}</div>
                         }
-                        return <div key={book}>{book}</div>
+                        return <div key={book.key}>{book.title}</div>
                     })
                 )
             }
