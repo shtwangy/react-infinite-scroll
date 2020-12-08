@@ -5,6 +5,7 @@ import {Book} from '../types/Book'
 interface OpenLibraryResponse {
     data: {
         docs: {
+            key: string
             title: string
         }[]
     }
@@ -13,7 +14,7 @@ interface OpenLibraryResponse {
 const useBookSearch = (query: string, pageNumber: number) => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
-    const [books, setBooks] = useState([] as string[])
+    const [books, setBooks] = useState([] as Book[])
     const [hasMore, setHasMore] = useState(false)
 
     useEffect(() => {
@@ -30,8 +31,14 @@ const useBookSearch = (query: string, pageNumber: number) => {
             params: { q: query, page: pageNumber },
             cancelToken: new axios.CancelToken(c => cancel = c)
         }).then((res: OpenLibraryResponse) => {
+            console.log(res)
             setBooks(prevBooks => {
-                return [...prevBooks, ...res.data.docs.map(b => b.title)]
+                return [...prevBooks, ...res.data.docs.map(b => {
+                    return {
+                        key: b.key,
+                        title: b.title
+                    }
+                })]
             })
             setHasMore(res.data.docs.length > 0)
             setLoading(false)
